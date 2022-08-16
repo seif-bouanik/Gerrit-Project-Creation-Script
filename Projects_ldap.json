@@ -1,0 +1,8 @@
+[
+    {
+        "name": "Project_Title",
+        "ldap_dev": "ldap/Gitgerrit_Access_group",
+        "ldap_ci": "ldap/Gitgerrit_CI_Access_group"
+    }
+]
+ 

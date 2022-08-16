@@ -1,0 +1,22 @@
+[
+    {
+        "projects comment": "Put the names of the all the projects you want to create with the same config in the 'projects' object below",
+        "projects": [
+            "Project1",
+            "Project2"
+        ],
+
+        "payload comment": "Customize the config for the projects you want to create in the 'payload' object below, check all the possible configs here: https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-input",
+        "payload": {
+            "description": "Project Description",
+            "submit_type": "INHERIT",
+            "parent": "parent-repo",
+            "create_empty_commit": true,
+            "permissions_only": false,
+            "branches": [
+                 "master",
+                 "dev"
+            ]
+        }
+    }
+]
