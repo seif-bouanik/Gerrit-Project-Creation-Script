@@ -1,9 +1,7 @@
 # Gerrit Projects Creation Using Python Scripts
-We usually have two main requests to create Gerrit projects:
-1. Projects that will inherit their config from **native Gerrit groups**.
+This repository has two scripts to cover two Gerrit project creation scenarios:
+1. Projects that will inherit their permissions from **native Gerrit groups**.
 2. Projects that will create these from scratch using internal **LDAP groups**.     
-    
-This repository has two scripts to cover both scenarios, to automate the process from start to finish, with the possibility to do it in bulk (multiple projects in one execution).
 
 ## PREREQUISITES
 [Python3](https://www.python.org/downloads/) should be installed on your local machine. The following libraries should be installed using pip:   
