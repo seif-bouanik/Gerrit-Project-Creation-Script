@@ -25,18 +25,19 @@ spinners==0.0.24
 
 # AUTHENTICATION
 print("# AUTHENTICATION")
-netid = input("Your netid: ") or "hardcoded netid"
-token = input("Your Gerrit HTTPs Token: ") or "hardcoded token"
+netid = input("Your netid: ") or os.environ["username env variable"]
+token = input("Your Gerrit HTTPs Token: ") or os.environ["token env variable"]
 
 
 # VARIABLES
 project_template = "All-project-template"
 project_template_url = f"https://{netid}:{token}@gerrit.com/a/{project_template}"
-workdir = str(pathlib.Path(__file__).parent.resolve())+"\\"
-template_folder = "template\\"
+workdir = str(pathlib.Path(__file__).parent.resolve())
+template_folder = "template"
 meta_branch = "refs/meta/config"
 meta_branch_remote = "refs/remotes/origin/meta/config"
 spinner = Halo(text='Loading', spinner='dots')
+projects_information = "Projects_ldap.json"
 
 
 # FUNCTIONS
@@ -56,9 +57,9 @@ def spinner_stop(str):
 # INPUT THE PROJECT(S) AND THE LDAP GROUPS FROM JSON
 print("\n\n\n# IMPORTING THE PROJECT(S) INFORMATION FROM JSON FILE")
 spinner.start()
-json_file = "Projects_ldap.json"
-with open(json_file, "r") as f:
-    projects_db = json.loads(f.read())
+
+with open(projects_information, "r") as f:
+    all_projects = json.loads(f.read())
 spinner_stop("--> DONE")
 
 
@@ -73,7 +74,7 @@ template_repository.pull('origin', f"{meta_branch}:{meta_branch_remote}", "--all
 spinner_stop("--> DONE")
 
 
-for project in projects_db:
+for project in all_projects:
     # REMOVING TRAILING SPACES AND REPLACING THE REST WITH UNDERSCORES IN THE PROJECT NAME
     project['name'] = project['name'].strip(" ").replace(" ", "_")
     # CREATE THE NEW PROJECT
@@ -132,7 +133,7 @@ for project in projects_db:
     print("\n\n\n# APPENDING THE TEMPLATE GROUPS TO THE NEW PROJECT GROUPS")
     print(f"GROUPS FILE: {workdir}{project_folder}\groups") 
     spinner.start()
-    with open(f"{template_folder}/groups", 'r') as template, open(f"{project_folder}\groups", 'a+') as project_groups_content: 
+    with open(os.path.joins(template_folder, "groups"), 'r') as template, open(os.path.joins(project_folder, "groups"), 'a+') as project_groups_content: 
         template_groups_content = template.readlines()
         for line in template_groups_content[2:]:
             project_groups_content.write(line)
@@ -143,7 +144,7 @@ for project in projects_db:
     print("\n\n\n# MODIFYING THE NEW PROJECT CONFIG FILE WITH LDAP GROUPS")
     print(f"PROJECT CONFIG FILE: {workdir}{project_folder}\project.config")
     spinner.start()
-    with open(f"{template_folder}project.config", 'r') as template, open(f"{project_folder}\project.config", 'w') as project_config: 
+    with open(os.path.join(template_folder, "project.config"), 'r') as template, open(os.path.join(project_folder, "project.config"), 'w') as project_config: 
         template_config_content = template.read()
         project_config_content = re.sub('Temporal$', project['ldap_dev'], template_config_content, flags=re.M)
         project_config_content = re.sub('Temporal_CI$', project['ldap_ci'], project_config_content, flags=re.M)
