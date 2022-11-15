@@ -5,6 +5,7 @@ from halo import Halo
 import json
 import sys
 import urllib.parse
+import os
 
 
 
@@ -18,8 +19,8 @@ spinners==0.0.24
 
 # AUTHENTICATION
 print("# AUTHENTICATION")
-netid = input("Your netid: ") or "hardcoded netid"
-token = input("Your Gerrit HTTPs Token: ") or "hardcoded token"
+netid = input("Your netid: ") or os.environ["username env variable"]
+token = input("Your Gerrit HTTPs Token: ") or os.environ["token env variable"]
 
 # VARIABLES
 spinner = Halo(text='Loading', spinner='dots')
@@ -33,13 +34,13 @@ def spinner_stop(str):
 # INPUT THE PROJECT(S) AND THE LDAP GROUPS FROM JSON
 print("\n\n\n# IMPORTING THE PROJECT(S) INFORMATION FROM JSON FILE")
 spinner.start()
-json_file = "Projects.json"
-with open(json_file, "r") as f:
-    projects_db = json.loads(f.read())
+projects_information =  "Projects.json"
+with open(projects_information, "r") as f:
+    all_projects = json.loads(f.read())
 spinner_stop("--> DONE")
 
 
-for projects in projects_db:
+for projects in all_projects:
     for project in projects["projects"]:
         # REMOVING TRAILING SPACES AND REPLACING THE REST WITH UNDERSCORES IN THE PROJECT NAME
         project = project.strip(" ").replace(" ", "_")
